@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Bow Training</string>
+    <string name="cant_repeticiones">Cantidad de repeticiones</string>
+    <string name="cant_series">Cantidad de series</string>
+    <string name="descanso_entre_repeticiones">Descanso entre repeticiones</string>
+    <string name="descanso_entre_series">Descanso entre series</string>
+    <string name="button_empezar">Empezar</string>
+
+    <!-- Text usados en la pantalla de cuando empieza todo -->
+    <string name="button_stop">Parar</string>
+    <string name="wait_time">Tiempo de descanso</string>
+    <string name="current_serie">Serie actual</string>
+    <string name="current_repetition">Repeticion actual</string>
+    <string name="total_serie">Series totales</string>
+    <string name="repeticiones_totales">Series totales</string>
+
+</resources>

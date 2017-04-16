@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ar.com.tzulberti.bowtraining.MainActivity">
+
+    <EditText
+        android:id="@+id/cantSeries"
+        android:layout_width="304dp"
+        android:layout_height="43dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="34dp"
+        android:ems="10"
+        android:hint="@string/cant_series"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/cantRepeticiones"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <EditText
+        android:id="@+id/cantRepeticiones"
+        android:layout_width="0dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="97dp"
+        android:ems="10"
+        android:hint="@string/cant_repeticiones"
+        android:inputType="number"
+        app:layout_constraintLeft_toLeftOf="@+id/tiempoSeries"
+        app:layout_constraintRight_toRightOf="@+id/cantSeries"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <EditText
+        android:id="@+id/tiempoSeries"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="125dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="124dp"
+        android:ems="10"
+        android:hint="@string/descanso_entre_series"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cantSeries"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <EditText
+        android:id="@+id/tiempoRepeticiones"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="@string/descanso_entre_repeticiones"
+        android:inputType="number"
+        app:layout_constraintLeft_toLeftOf="@+id/tiempoSeries"
+        app:layout_constraintRight_toRightOf="@+id/tiempoSeries"
+        app:layout_constraintTop_toBottomOf="@+id/tiempoSeries"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="180dp"
+        android:onClick="start"
+        android:text="@string/button_empezar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/tiempoRepeticiones"
+        app:layout_constraintRight_toRightOf="@+id/tiempoRepeticiones"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+</android.support.constraint.ConstraintLayout>
