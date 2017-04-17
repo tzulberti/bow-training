@@ -9,6 +9,12 @@ import android.view.View;
 import android.widget.TextView;
 
 
+/**
+ * Display the excercise information.
+ *
+ * The code has a few functions calling each other because the CountDownTimer isn't blocking
+ * the normal execution. So it must use the transition once that the timer has finished.
+ */
 public class DisplayMessageActivity extends AppCompatActivity {
 
     private TextToSpeech textToSpeech;
@@ -23,6 +29,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
     private int currentRepetition;
 
     private TextView timeLeftText;
+    private TextView statusText;
 
 
     @Override
@@ -42,6 +49,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
     }
 
     public void stop(View view) {
+        this.statusText.setText(R.string.stoppedStatus);
         this.shouldStop = true;
     }
 
@@ -57,12 +65,6 @@ public class DisplayMessageActivity extends AppCompatActivity {
         this.currentRepetition = 1;
         this.currentSerie = 1;
 
-        System.out.println("On start method");
-        System.out.println(this.seriesAmount);
-        System.out.println(this.repetitionsAmount);
-        System.out.println(this.repetitionsDuration);
-        System.out.println(this.seriesSleepTime);
-
         TextView totalSeriesText = (TextView) findViewById(R.id.textTotalSeries);
         totalSeriesText.setText(Integer.toString(seriesAmount));
 
@@ -71,10 +73,15 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
 
         this.timeLeftText = (TextView) findViewById(R.id.textTimeLeft);
+        this.statusText = (TextView) findViewById(R.id.textStatus);
         this.startSeries();
     }
 
-
+    /**
+     * Runn the current serie (if it should or if the program hasn' been stopped).
+     *
+     * Also, it will rest if running between series
+     */
     private void startSeries() {
         if (this.shouldStop) {
             return ;
@@ -83,11 +90,14 @@ public class DisplayMessageActivity extends AppCompatActivity {
         if (this.currentSerie > this.seriesAmount) {
             // finished reading all the series
             this.readValue("Finished excercise");
+            this.statusText.setText(R.string.finishedStatus);
             return;
         }
 
         TextView currentSerieText = (TextView) findViewById(R.id.textCurrentSerie);
         currentSerieText.setText(Integer.toString(this.currentSerie));
+
+        // make sure of reseting this value for the different series
         this.currentRepetition = 1;
 
         if (this.currentSerie == 1) {
@@ -95,6 +105,10 @@ public class DisplayMessageActivity extends AppCompatActivity {
         } else {
             // it has finished the first serie so it should go to the next one
             // after sleeping a given number of seconds
+            this.statusText.setText(R.string.restStatus);
+            timeLeftText.setText(Integer.toString(seriesSleepTime));
+            timeLeftText.setBackgroundResource(R.color.colorGreen);
+
             CountDownTimer serieSleepTimer = new CountDownTimer(seriesSleepTime * 1000, 1000) {
 
                 public void onTick(long millisUntilFinished) {
@@ -119,6 +133,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
     }
 
+
     private void startRepetition() {
         if (this.shouldStop) {
             return ;
@@ -135,7 +150,15 @@ public class DisplayMessageActivity extends AppCompatActivity {
         TextView currentRepetitionText = (TextView) findViewById(R.id.textCurrentRepetition);
         currentRepetitionText.setText(Integer.toString(currentRepetition));
 
-        // sleep between the series
+        // set the values because on the first execution of onTick will be
+        // executed after one second
+        this.statusText.setText(R.string.runningStatus);
+        readValue(Integer.toString(repetitionsDuration));
+        timeLeftText.setText(Integer.toString(repetitionsDuration));
+        timeLeftText.setBackgroundResource(R.color.colorRed);
+
+
+        // do the current repetition
         CountDownTimer excerciseTimer = new CountDownTimer(repetitionsDuration * 1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -145,7 +168,6 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
                 long secondsMissing = millisUntilFinished / 1000;
                 timeLeftText.setText(Long.toString(secondsMissing));
-                timeLeftText.setBackgroundResource(R.color.colorRed);
                 readValue(Long.toString(secondsMissing));
             }
 
@@ -154,6 +176,11 @@ public class DisplayMessageActivity extends AppCompatActivity {
                 readValue("Down");
 
                 currentRepetition += 1;
+
+
+                statusText.setText(R.string.restStatus);
+                timeLeftText.setBackgroundResource(R.color.colorGreen);
+                timeLeftText.setText(Integer.toString(repetitionsDuration));
 
                 // sleep between the repetitions
                 CountDownTimer timerDescansoSeries = new CountDownTimer(repetitionsDuration * 1000, 1000) {
@@ -166,7 +193,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
                         long secondsMissing = millisUntilFinished / 1000;
                         timeLeftText.setText(Long.toString(secondsMissing));
-                        timeLeftText.setBackgroundResource(R.color.colorGreen);
+
                         if (secondsMissing < 3) {
                             timeLeftText.setBackgroundResource(R.color.colorYellow);
                         }

@@ -15,6 +15,18 @@
     <string name="currentRepetition">Repeticion actual</string>
     <string name="totalSeries">Series totales</string>
     <string name="totalRepetitions">Repeticiones totales</string>
+    <string name="status">Estado</string>
+
+    <!-- Differentes estados en el que se puede encontrar la applicacion -->
+    <string name="runningStatus">Arco abierto</string>
+    <string name="restStatus">Descansando</string>
+    <string name="stoppedStatus">Paro</string>
+    <string name="finishedStatus">Termino</string>
+
+    <!-- Notifications between the excersie -->
+    <string name="finishedSerie">Termino serie</string>
+    <string name="downBow">Abajo</string>
+    <string name="upBow">Arriba</string>
 
 
 
