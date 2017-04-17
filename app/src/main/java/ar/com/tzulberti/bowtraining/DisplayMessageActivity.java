@@ -124,6 +124,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
             this.readValue("Finished current serie");
             this.currentSerie += 1;
             this.startSeries();
+            return ;
         }
 
         TextView cantRepetitionText = (TextView) findViewById(R.id.textCurrentRepetitionValue);
