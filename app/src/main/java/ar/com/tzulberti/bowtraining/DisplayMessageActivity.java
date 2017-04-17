@@ -1,6 +1,7 @@
 package ar.com.tzulberti.bowtraining;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import android.widget.TextView;
  */
 public class DisplayMessageActivity extends AppCompatActivity {
 
+    private final static int MIN_WARNING_START = 1;
+
     private TextToSpeech textToSpeech;
     private boolean shouldStop;
 
@@ -24,6 +27,8 @@ public class DisplayMessageActivity extends AppCompatActivity {
     private int seriesSleepTime;
     private int repetitionsAmount;
     private int repetitionsDuration;
+
+    private CountDownTimer currentTimer;
 
     private int currentSerie;
     private int currentRepetition;
@@ -40,10 +45,10 @@ public class DisplayMessageActivity extends AppCompatActivity {
         this.textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if (status != TextToSpeech.SUCCESS) {
-                    // TODO check what we can do in this case
-                }
-                start();
+            if (status != TextToSpeech.SUCCESS) {
+                // TODO check what we can do in this case
+            }
+            start();
             }
         });
     }
@@ -51,19 +56,21 @@ public class DisplayMessageActivity extends AppCompatActivity {
     public void stop(View view) {
         this.statusText.setText(R.string.stoppedStatus);
         this.shouldStop = true;
+        this.currentTimer.cancel();
     }
 
 
     public void start() {
         Intent intent = getIntent();
+        int startIn = intent.getIntExtra(MainActivity.START_IN, 1);
+
         this.seriesAmount = intent.getIntExtra(MainActivity.SERIES_AMOUNT, 0);
         this.repetitionsAmount = intent.getIntExtra(MainActivity.REPETITIONS_AMOUNT, 0);
-        this.repetitionsDuration = intent.getIntExtra(MainActivity.REPETITIONS_DURATION, 0);
-        this.seriesSleepTime = intent.getIntExtra(MainActivity.SERIES_SLEEP_TIME, 0);
+        this.repetitionsDuration = intent.getIntExtra(MainActivity.REPETITIONS_DURATION, 0) + 1;
+        this.seriesSleepTime = intent.getIntExtra(MainActivity.SERIES_SLEEP_TIME, 0) + 1 ;
 
-
-        this.currentRepetition = 1;
-        this.currentSerie = 1;
+        this.timeLeftText = (TextView) findViewById(R.id.textTimeLeft);
+        this.statusText = (TextView) findViewById(R.id.textStatus);
 
         TextView totalSeriesText = (TextView) findViewById(R.id.textTotalSeries);
         totalSeriesText.setText(Integer.toString(seriesAmount));
@@ -71,11 +78,31 @@ public class DisplayMessageActivity extends AppCompatActivity {
         TextView totalRepetitionsText = (TextView) findViewById(R.id.textTotalRepetitions);
         totalRepetitionsText.setText(Integer.toString(repetitionsAmount));
 
+        this.statusText.setText(R.string.waitingToStart);
+        this.timeLeftText.setBackgroundResource(R.color.colorBlue);
+        this.timeLeftText.setText(Integer.toString(startIn));
 
-        this.timeLeftText = (TextView) findViewById(R.id.textTimeLeft);
-        this.statusText = (TextView) findViewById(R.id.textStatus);
-        this.startSeries();
+
+        this.currentRepetition = 1;
+        this.currentSerie = 1;
+
+        // start the count down before starting to do the exercise
+        this.currentTimer = new CountDownTimer(startIn * 1000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                long secondsMissing = millisUntilFinished / 1000;
+                timeLeftText.setText(Long.toString(secondsMissing));
+                if (secondsMissing <= MIN_WARNING_START) {
+                    timeLeftText.setBackgroundResource(R.color.colorYellow);
+                }
+            }
+
+            public void onFinish() {
+                // after that time start the exercise
+                startSeries();
+            }
+        }.start();
     }
+
 
     /**
      * Runn the current serie (if it should or if the program hasn' been stopped).
@@ -83,14 +110,17 @@ public class DisplayMessageActivity extends AppCompatActivity {
      * Also, it will rest if running between series
      */
     private void startSeries() {
+        final Resources resources = getResources();
         if (this.shouldStop) {
             return ;
         }
 
         if (this.currentSerie > this.seriesAmount) {
             // finished reading all the series
-            this.readValue("Finished excercise");
+            this.readValue(resources.getText(R.string.finishedStatus));
             this.statusText.setText(R.string.finishedStatus);
+            this.timeLeftText.setBackgroundResource(R.color.colorBlue);
+            this.timeLeftText.setText("");
             return;
         }
 
@@ -105,27 +135,22 @@ public class DisplayMessageActivity extends AppCompatActivity {
         } else {
             // it has finished the first serie so it should go to the next one
             // after sleeping a given number of seconds
-            this.statusText.setText(R.string.restStatus);
-            timeLeftText.setText(Integer.toString(seriesSleepTime));
-            timeLeftText.setBackgroundResource(R.color.colorGreen);
+            this.readValue(resources.getText(R.string.finishedSerie));
+            this.timeLeftText.setText(Integer.toString(seriesSleepTime));
+            this.timeLeftText.setBackgroundResource(R.color.colorGreen);
+            this.statusText.setText(resources.getText(R.string.restStatus));
 
-            CountDownTimer serieSleepTimer = new CountDownTimer(seriesSleepTime * 1000, 1000) {
+            this.currentTimer = new CountDownTimer(seriesSleepTime * 1000, 1000) {
 
                 public void onTick(long millisUntilFinished) {
-                    if (shouldStop) {
-                        this.cancel();
-                    }
-
                     long secondsMissing = millisUntilFinished / 1000;
                     timeLeftText.setText(Long.toString(secondsMissing));
-                    if (secondsMissing < 3) {
+                    if (secondsMissing <= MIN_WARNING_START) {
                         timeLeftText.setBackgroundResource(R.color.colorYellow);
                     }
                 }
 
                 public void onFinish() {
-                    // TODO ver como sacar este valor del strings.xml
-                    readValue("Up");
                     startRepetition();
                 }
             }.start();
@@ -135,13 +160,13 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
 
     private void startRepetition() {
+        final Resources resources = getResources();
         if (this.shouldStop) {
             return ;
         }
 
         if (this.currentRepetition > this.repetitionsAmount) {
             // finished the current serie and it is time to go to the next one
-            this.readValue("Finished current serie");
             this.currentSerie += 1;
             this.startSeries();
             return ;
@@ -152,56 +177,52 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
         // set the values because on the first execution of onTick will be
         // executed after one second
-        this.statusText.setText(R.string.runningStatus);
-        readValue(Integer.toString(repetitionsDuration));
+        this.readValue(Integer.toString(repetitionsDuration));
+        this.statusText.setText(resources.getText(R.string.runningStatus));
         timeLeftText.setText(Integer.toString(repetitionsDuration));
         timeLeftText.setBackgroundResource(R.color.colorRed);
 
-
         // do the current repetition
-        CountDownTimer excerciseTimer = new CountDownTimer(repetitionsDuration * 1000, 1000) {
+
+
+        this.currentTimer = new CountDownTimer(repetitionsDuration * 1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                if (shouldStop) {
-                    this.cancel();
-                }
-
                 long secondsMissing = millisUntilFinished / 1000;
                 timeLeftText.setText(Long.toString(secondsMissing));
                 readValue(Long.toString(secondsMissing));
             }
 
             public void onFinish() {
-                // TODO ver como sacar este valor del strings.xml
-                readValue("Down");
-
+                //readValue("0");
+                readValue(resources.getText(R.string.downBow));
                 currentRepetition += 1;
-
-
-                statusText.setText(R.string.restStatus);
+                statusText.setText(resources.getText(R.string.restStatus));
                 timeLeftText.setBackgroundResource(R.color.colorGreen);
                 timeLeftText.setText(Integer.toString(repetitionsDuration));
 
+                // if this is the last repetiton of the serie there is no need
+                // to sleep because that is going to be given by the serie
+                if (currentRepetition > repetitionsAmount) {
+                    currentSerie += 1;
+                    startSeries();
+                    return ;
+                }
+
                 // sleep between the repetitions
-                CountDownTimer timerDescansoSeries = new CountDownTimer(repetitionsDuration * 1000, 1000) {
+                currentTimer = new CountDownTimer(repetitionsDuration * 1000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
-
-                        if (shouldStop) {
-                            this.cancel();
-                        }
-
                         long secondsMissing = millisUntilFinished / 1000;
                         timeLeftText.setText(Long.toString(secondsMissing));
 
-                        if (secondsMissing < 3) {
+                        if (secondsMissing <= MIN_WARNING_START) {
                             timeLeftText.setBackgroundResource(R.color.colorYellow);
                         }
                     }
 
                     public void onFinish() {
-                        // TODO ver como sacar este valor del strings.xml
-                        readValue("Up");
+                        readValue(resources.getText(R.string.upBow));
                         startRepetition();
                     }
                 }.start();
@@ -211,10 +232,15 @@ public class DisplayMessageActivity extends AppCompatActivity {
     }
 
 
-    public void readValue(String text) {
-        int res = this.textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    public void readValue(CharSequence text) {
+        if (this.shouldStop) {
+            return;
+        }
+
+        int res = this.textToSpeech.speak(String.valueOf(text), TextToSpeech.QUEUE_FLUSH, null);
         if (res != TextToSpeech.SUCCESS) {
             // TODO check what we can do in this case
+            System.err.println("Error while reading value: " + text);
         }
     }
 }

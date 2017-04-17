@@ -24,6 +24,7 @@
     <string name="restStatus">Descansando</string>
     <string name="stoppedStatus">Paro</string>
     <string name="finishedStatus">Termino</string>
+    <string name="waitingToStart">Esperando...</string>
 
     <!-- Notifications between the excersie -->
     <string name="finishedSerie">Termino serie</string>

@@ -37,7 +37,7 @@
                 android:id="@+id/textTotalSeries"
                 android:gravity="right"
                 android:padding="3dip"
-                android:text="Foobar" />
+                android:text="0" />
         </TableRow>
 
         <TableRow>
@@ -49,7 +49,7 @@
                 android:id="@+id/textTotalRepetitions"
                 android:gravity="right"
                 android:padding="3dip"
-                android:text="Foobar" />
+                android:text="0" />
         </TableRow>
 
         <TableRow>
@@ -61,7 +61,7 @@
                 android:id="@+id/textCurrentSerie"
                 android:gravity="right"
                 android:padding="3dip"
-                android:text="Foobar" />
+                android:text="0" />
         </TableRow>
 
         <TableRow>
@@ -73,7 +73,7 @@
                 android:id="@+id/textCurrentRepetition"
                 android:gravity="right"
                 android:padding="3dip"
-                android:text="Foobar" />
+                android:text="0" />
         </TableRow>
 
         <TableRow>
@@ -85,7 +85,7 @@
                 android:id="@+id/textStatus"
                 android:gravity="right"
                 android:padding="3dip"
-                android:text="Foobar" />
+                android:text="0" />
         </TableRow>
 
         <TableRow
@@ -96,6 +96,9 @@
                 android:padding="3dip"
                 android:layout_weight="1"
                 android:layout_height="60dip"
+                android:gravity="center"
+                android:textSize="32sp"
+                android:textStyle="bold"
                 />
         </TableRow>
     </TableLayout>
