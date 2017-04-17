@@ -22,6 +22,8 @@ public class DisplayMessageActivity extends AppCompatActivity {
     private int currentSerie;
     private int currentRepetition;
 
+    private TextView timeLeftText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +63,14 @@ public class DisplayMessageActivity extends AppCompatActivity {
         System.out.println(this.repetitionsDuration);
         System.out.println(this.seriesSleepTime);
 
-        TextView totalSeriesText = (TextView) findViewById(R.id.textTotalSeriesValue);
+        TextView totalSeriesText = (TextView) findViewById(R.id.textTotalSeries);
         totalSeriesText.setText(Integer.toString(seriesAmount));
 
-        TextView totalRepetitionsText = (TextView) findViewById(R.id.textTotalRepetitionsValue);
+        TextView totalRepetitionsText = (TextView) findViewById(R.id.textTotalRepetitions);
         totalRepetitionsText.setText(Integer.toString(repetitionsAmount));
 
+
+        this.timeLeftText = (TextView) findViewById(R.id.textTimeLeft);
         this.startSeries();
     }
 
@@ -82,7 +86,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
             return;
         }
 
-        TextView currentSerieText = (TextView) findViewById(R.id.textCurrentSerieValue);
+        TextView currentSerieText = (TextView) findViewById(R.id.textCurrentSerie);
         currentSerieText.setText(Integer.toString(this.currentSerie));
         this.currentRepetition = 1;
 
@@ -99,8 +103,9 @@ public class DisplayMessageActivity extends AppCompatActivity {
                     }
 
                     long secondsMissing = millisUntilFinished / 1000;
+                    timeLeftText.setText(Long.toString(secondsMissing));
                     if (secondsMissing < 3) {
-                        readValue(Long.toString(secondsMissing));
+                        timeLeftText.setBackgroundResource(R.color.colorYellow);
                     }
                 }
 
@@ -127,8 +132,8 @@ public class DisplayMessageActivity extends AppCompatActivity {
             return ;
         }
 
-        TextView cantRepetitionText = (TextView) findViewById(R.id.textCurrentRepetitionValue);
-        cantRepetitionText.setText(Integer.toString(currentRepetition));
+        TextView currentRepetitionText = (TextView) findViewById(R.id.textCurrentRepetition);
+        currentRepetitionText.setText(Integer.toString(currentRepetition));
 
         // sleep between the series
         CountDownTimer excerciseTimer = new CountDownTimer(repetitionsDuration * 1000, 1000) {
@@ -138,7 +143,10 @@ public class DisplayMessageActivity extends AppCompatActivity {
                     this.cancel();
                 }
 
-                readValue(Long.toString(millisUntilFinished / 1000));
+                long secondsMissing = millisUntilFinished / 1000;
+                timeLeftText.setText(Long.toString(secondsMissing));
+                timeLeftText.setBackgroundResource(R.color.colorRed);
+                readValue(Long.toString(secondsMissing));
             }
 
             public void onFinish() {
@@ -151,13 +159,16 @@ public class DisplayMessageActivity extends AppCompatActivity {
                 CountDownTimer timerDescansoSeries = new CountDownTimer(repetitionsDuration * 1000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
+
                         if (shouldStop) {
                             this.cancel();
                         }
 
                         long secondsMissing = millisUntilFinished / 1000;
+                        timeLeftText.setText(Long.toString(secondsMissing));
+                        timeLeftText.setBackgroundResource(R.color.colorGreen);
                         if (secondsMissing < 3) {
-                            readValue(Long.toString(secondsMissing));
+                            timeLeftText.setBackgroundResource(R.color.colorYellow);
                         }
                     }
 
