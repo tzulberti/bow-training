@@ -6,7 +6,9 @@
     <string name="repetitionsAmount">Cantidad de repeticiones</string>
     <string name="repetitionsDuration">Duracion de cada repeticion</string>
     <string name="seriesSleepTime">Descanso entre series</string>
-    <string name="button_start">Empezar</string>
+    <string name="startIn">Empezar en</string>
+    <string name="buttonStart">Empezar</string>
+    <string name="requiredValue">Requerido</string>
 
     <!-- Text usados en la pantalla de cuando empieza todo -->
     <string name="button_stop">Parar</string>

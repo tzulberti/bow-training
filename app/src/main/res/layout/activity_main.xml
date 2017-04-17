@@ -6,87 +6,84 @@
     android:layout_height="match_parent"
     tools:context="ar.com.tzulberti.bowtraining.MainActivity">
 
-    <EditText
-        android:id="@+id/seriesAmount"
-        android:layout_width="304dp"
-        android:layout_height="43dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="29dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="34dp"
-        android:ems="10"
-        android:hint="@string/seriesAmount"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/repetitionsAmount"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+    <TableLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:stretchColumns="1"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
 
-    <EditText
-        android:id="@+id/repetitionsAmount"
-        android:layout_width="0dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="97dp"
-        android:ems="10"
-        android:hint="@string/repetitionsAmount"
-        android:inputType="number"
-        app:layout_constraintLeft_toLeftOf="@+id/seriesSleepTime"
-        app:layout_constraintRight_toRightOf="@+id/seriesAmount"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        <TableRow>
+            <TextView
+                android:text="@string/seriesAmount"
+                android:padding="3dip" />
 
-    <EditText
-        android:id="@+id/seriesSleepTime"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="125dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="124dp"
-        android:ems="10"
-        android:hint="@string/seriesSleepTime"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="@+id/button"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/seriesAmount"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+            <EditText
+                android:id="@+id/seriesAmount"
+                android:gravity="right"
+                android:inputType="number"
+                />
+        </TableRow>
 
-    <EditText
-        android:id="@+id/repetitionsDuration"
-        android:layout_width="0dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="12dp"
-        android:ems="10"
-        android:hint="@string/repetitionsDuration"
-        android:inputType="number"
-        app:layout_constraintLeft_toLeftOf="@+id/seriesSleepTime"
-        app:layout_constraintRight_toRightOf="@+id/seriesSleepTime"
-        app:layout_constraintTop_toBottomOf="@+id/seriesSleepTime"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        <TableRow>
+            <TextView
+                android:text="@string/repetitionsAmount"
+                android:padding="3dip" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="180dp"
-        android:onClick="start"
-        android:text="@string/button_start"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/repetitionsDuration"
-        app:layout_constraintRight_toRightOf="@+id/repetitionsDuration"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
+            <EditText
+                android:id="@+id/repetitionsAmount"
+                android:gravity="right"
+                android:inputType="number"
+                />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="@string/seriesSleepTime"
+                android:padding="3dip" />
+
+            <EditText
+                android:id="@+id/seriesSleepTime"
+                android:gravity="right"
+                android:inputType="number"
+                />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="@string/repetitionsDuration"
+                android:padding="3dip" />
+
+            <EditText
+                android:id="@+id/repetitionsDuration"
+                android:gravity="right"
+                android:inputType="number"
+                />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:text="@string/startIn"
+                android:padding="3dip" />
+
+            <EditText
+                android:id="@+id/startIn"
+                android:gravity="right"
+                android:inputType="number"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            >
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:onClick="start"
+                android:layout_weight="1"
+                android:text="@string/buttonStart"
+                />
+        </TableRow>
+     </TableLayout>
+
 </android.support.constraint.ConstraintLayout>

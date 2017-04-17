@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String SERIES_SLEEP_TIME = "ar.com.tzulberti.bowtraining.seriesSleepTime";
     public static final String REPETITIONS_AMOUNT = "ar.com.tzulberti.bowtraining.repetitionsAmount";
     public static final String REPETITIONS_DURATION = "ar.com.tzulberti.bowtraining.repetitionsDuration";
+    public static final String START_IN = "ar.com.tzulberti.bowtraining.startIn";
 
 
     @Override
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         int seriesSleepTime = sharedPref.getInt(SERIES_SLEEP_TIME, -1);
         int repetitionsAmount = sharedPref.getInt(REPETITIONS_AMOUNT, -1);
         int repetitionsDuration = sharedPref.getInt(REPETITIONS_DURATION, -1);
+        int startIn = sharedPref.getInt(START_IN, -1);
+
 
         // TODO maybe create a map with this values to prevent doing copy&paste?
         if (seriesAmount >= 0) {
@@ -44,9 +47,15 @@ public class MainActivity extends AppCompatActivity {
             EditText cantSeriesEditText = (EditText) findViewById(R.id.repetitionsAmount);
             cantSeriesEditText.setText(Integer.toString(repetitionsAmount));
         }
+
         if (repetitionsDuration >= 0) {
             EditText cantSeriesEditText = (EditText) findViewById(R.id.repetitionsDuration);
             cantSeriesEditText.setText(Integer.toString(repetitionsDuration));
+        }
+
+        if (startIn >= 0) {
+            EditText startInEditText = (EditText) findViewById(R.id.startIn);
+            startInEditText.setText(Integer.toString(startIn));
         }
 
     }
@@ -57,32 +66,74 @@ public class MainActivity extends AppCompatActivity {
         EditText repetitionsAmountEditText = (EditText) findViewById(R.id.repetitionsAmount);
         EditText seriesSleepTimeEditText = (EditText) findViewById(R.id.seriesSleepTime);
         EditText repetitionDurationEditText = (EditText) findViewById(R.id.repetitionsDuration);
-
+        EditText startInEditText = (EditText) findViewById(R.id.startIn);
 
         boolean foundError = false;
-        String seriesAmount = seriesAmountEditText.getText().toString();
-        String repetitionsAmount = repetitionsAmountEditText.getText().toString();
-        String seriesSleepTime = seriesSleepTimeEditText.getText().toString();
-        String repetitionDuration = repetitionDurationEditText.getText().toString();
+        String seriesAmountInputValue = seriesAmountEditText.getText().toString();
+        String repetitionsAmountInputValue = repetitionsAmountEditText.getText().toString();
+        String seriesSleepTimeInputValue = seriesSleepTimeEditText.getText().toString();
+        String repetitionDurationInputValue = repetitionDurationEditText.getText().toString();
+        String startInInputValue = startInEditText.getText().toString();
 
+        String requiredValueError = getResources().getString(R.string.requiredValue);
 
-        if (seriesAmount.equals("")) {
-            seriesAmountEditText.setError(seriesAmountEditText.getHint());
+        if (seriesAmountInputValue.equals("")) {
+            seriesAmountEditText.setError(requiredValueError);
             foundError = true;
         }
 
-        if (repetitionsAmount.equals("")) {
-            repetitionsAmountEditText.setError(repetitionsAmountEditText.getHint());
+        if (repetitionsAmountInputValue.equals("")) {
+            repetitionsAmountEditText.setError(requiredValueError);
             foundError = true;
         }
 
-        if (seriesSleepTime.equals("")) {
-            seriesSleepTimeEditText.setError(seriesSleepTimeEditText.getHint());
+        if (seriesSleepTimeInputValue.equals("")) {
+            seriesSleepTimeEditText.setError(requiredValueError);
             foundError = true;
         }
 
-        if (repetitionDuration.equals("")) {
-            repetitionDurationEditText.setError(repetitionDurationEditText.getHint());
+        if (repetitionDurationInputValue.equals("")) {
+            repetitionDurationEditText.setError(requiredValueError);
+            foundError = true;
+        }
+
+        if (startInInputValue.equals("")) {
+            startInEditText.setError(requiredValueError);
+            foundError = true;
+        }
+
+        if (foundError) {
+            return;
+        }
+
+        int seriesAmount = Integer.parseInt(seriesAmountInputValue);
+        int repetitionsAmount = Integer.parseInt(repetitionsAmountInputValue);
+        int seriesSleepTime = Integer.parseInt(seriesSleepTimeInputValue);
+        int repetitionDuration = Integer.parseInt(repetitionDurationInputValue);
+        int startIn = Integer.parseInt(startInInputValue);
+
+        if (seriesAmount <= 0) {
+            seriesAmountEditText.setError(requiredValueError);
+            foundError = true;
+        }
+
+        if (repetitionsAmount <= 0) {
+            repetitionsAmountEditText.setError(requiredValueError);
+            foundError = true;
+        }
+
+        if (seriesSleepTime <= 0) {
+            seriesSleepTimeEditText.setError(requiredValueError);
+            foundError = true;
+        }
+
+        if (repetitionDuration <= 0) {
+            repetitionDurationEditText.setError(requiredValueError);
+            foundError = true;
+        }
+
+        if (startIn <= 0) {
+            startInEditText.setError(startInEditText.getHint());
             foundError = true;
         }
 
@@ -94,18 +145,20 @@ public class MainActivity extends AppCompatActivity {
         // TODO maybe create a dict with the values to prevent copy&paste
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(SERIES_AMOUNT, Integer.parseInt(seriesAmount));
-        editor.putInt(REPETITIONS_AMOUNT, Integer.parseInt(repetitionsAmount));
-        editor.putInt(SERIES_SLEEP_TIME, Integer.parseInt(seriesSleepTime));
-        editor.putInt(REPETITIONS_DURATION, Integer.parseInt(repetitionDuration));
+        editor.putInt(SERIES_AMOUNT, seriesAmount);
+        editor.putInt(REPETITIONS_AMOUNT, repetitionsAmount);
+        editor.putInt(SERIES_SLEEP_TIME, seriesSleepTime);
+        editor.putInt(REPETITIONS_DURATION, repetitionDuration);
+        editor.putInt(START_IN, startIn);
         editor.commit();
 
         // start the real exercise
         Intent intent = new Intent(this, DisplayMessageActivity.class);
-        intent.putExtra(SERIES_AMOUNT, Integer.parseInt(seriesAmount));
-        intent.putExtra(REPETITIONS_AMOUNT, Integer.parseInt(repetitionsAmount));
-        intent.putExtra(SERIES_SLEEP_TIME, Integer.parseInt(seriesSleepTime));
-        intent.putExtra(REPETITIONS_DURATION, Integer.parseInt(repetitionDuration));
+        intent.putExtra(SERIES_AMOUNT, seriesAmount);
+        intent.putExtra(REPETITIONS_AMOUNT, repetitionsAmount);
+        intent.putExtra(SERIES_SLEEP_TIME, seriesSleepTime);
+        intent.putExtra(REPETITIONS_DURATION, repetitionDuration);
+        intent.putExtra(START_IN, startIn);
         startActivity(intent);
     }
 }
