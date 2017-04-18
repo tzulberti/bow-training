@@ -7,6 +7,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 
@@ -41,6 +42,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_message);
+
         this.shouldStop = false;
         this.textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -51,6 +53,14 @@ public class DisplayMessageActivity extends AppCompatActivity {
             start();
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        this.currentTimer.cancel();
+        this.shouldStop = true;
     }
 
     public void stop(View view) {
